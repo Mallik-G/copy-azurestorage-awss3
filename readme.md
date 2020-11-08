@@ -2,4 +2,4 @@
 
 ![Architecture](https://github.com/rebremer/blog-datapipeline-cicd/blob/master/pictures/data_factory_overview.png)
 
-Details will be added later.
+Details will be added later, 7GB file took 12 minutes, VNET integration and Azure Function MI are used to authenticate to Azure Storage, AWS key id/credentials to AWS S3
