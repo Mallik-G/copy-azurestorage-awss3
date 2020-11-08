@@ -6,37 +6,12 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "demo-durablefunctionawss3-adfv2"
-		},
-		"AzureFunction_functionKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'functionKey' of 'AzureFunction'"
-		},
-		"AzureFunction_properties_typeProperties_functionAppUrl": {
-			"type": "string",
-			"defaultValue": "https://demo-durablefunctionawss3-app.azurewebsites.net"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureFunction')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureFunction",
-				"typeProperties": {
-					"functionAppUrl": "[parameters('AzureFunction_properties_typeProperties_functionAppUrl')]",
-					"functionKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureFunction_functionKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy to S3')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -57,8 +32,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"functionName": "orchestrators/DurableFunctionOrchestrator",
-							"method": "GET",
-							"headers": {}
+							"method": "GET"
 						},
 						"linkedServiceName": {
 							"referenceName": "AzureFunction",
@@ -90,17 +64,14 @@
 								"value": "@activity('Start Durable Function No Time Out').output.statusQueryGetUri",
 								"type": "Expression"
 							},
-							"method": "GET",
-							"headers": {}
+							"method": "GET"
 						}
 					}
 				],
 				"annotations": [],
 				"lastPublishTime": "2020-11-06T15:11:41Z"
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureFunction')]"
-			]
+			"dependsOn": []
 		}
 	]
 }

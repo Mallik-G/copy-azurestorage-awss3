@@ -27,7 +27,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Start orchestrator",
+						"name": "Start Durable Function No Time Out",
 						"type": "AzureFunctionActivity",
 						"dependsOn": [],
 						"policy": {
@@ -54,7 +54,7 @@
 						"type": "WebActivity",
 						"dependsOn": [
 							{
-								"activity": "Start orchestrator",
+								"activity": "Start Durable Function No Time Out",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -70,7 +70,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"url": {
-								"value": "@activity('Start orchestrator').output.statusQueryGetUri",
+								"value": "@activity('Start Durable Function No Time Out').output.statusQueryGetUri",
 								"type": "Expression"
 							},
 							"method": "GET",
