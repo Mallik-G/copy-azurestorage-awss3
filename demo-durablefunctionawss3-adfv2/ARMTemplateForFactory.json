@@ -50,6 +50,7 @@
 					},
 					{
 						"name": "Copy data from Azure Storage to AWS S3",
+						"description": "VNET integration and Azure Function MI are used to authenticate to Azure Storage, AWS key id and key are used to authenticate to S3",
 						"type": "WebActivity",
 						"dependsOn": [
 							{
