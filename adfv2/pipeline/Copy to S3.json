@@ -24,7 +24,7 @@
 				}
 			},
 			{
-				"name": "Copy data",
+				"name": "Copy data from Azure Storage to AWS S3",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
