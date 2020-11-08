@@ -1,0 +1,58 @@
+{
+	"name": "Copy to S3",
+	"properties": {
+		"activities": [
+			{
+				"name": "Start orchestrator",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "orchestrators/DurableFunctionOrchestrator",
+					"method": "GET"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureFunction",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy data",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Start orchestrator",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@activity('Start orchestrator').output.statusQueryGetUri",
+						"type": "Expression"
+					},
+					"method": "GET"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2020-11-06T15:11:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
