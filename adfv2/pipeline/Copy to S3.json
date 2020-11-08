@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@activity('Start orchestrator').output.statusQueryGetUri",
+						"value": "@activity('Start Durable Function No Time Out').output.statusQueryGetUri",
 						"type": "Expression"
 					},
 					"method": "GET"
