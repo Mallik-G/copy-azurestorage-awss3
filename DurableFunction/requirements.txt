@@ -6,4 +6,5 @@ azure-functions
 azure-functions-durable>=1.0.0b6
 azure-storage-blob
 azure-identity
+azure-keyvault-secrets
 boto3

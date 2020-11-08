@@ -8,31 +8,40 @@
 
 import logging
 import time
+import os
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
+from azure.keyvault.secrets import SecretClient
 import boto3
 from botocore.exceptions import ClientError
 
 def main(name: str) -> str:
 
-    status=""
+    par_account_url = os.environ['account_url']
+    par_storage_container = os.environ['storage_container']
+    par_file_name = os.environ['file_name'] # todo, pass this parameter from ADFv2 or loop through storage container
+    par_keyvault_url = os.environ['keyvault_url']
+    par_s3_bucket = os.environ['s3_bucket']
+
+    status = "ok"
     try:
         token_credential = DefaultAzureCredential()
         blob_service_client = BlobServiceClient(
-            account_url="https://blogsnapshotautstor.blob.core.windows.net",
+            account_url=par_account_url,
             credential=token_credential
         )
-        # videos zip is 7.3GB
-        blob_client = blob_service_client.get_blob_client(container="feyenoord", blob="videos.zip")
+        blob_client = blob_service_client.get_blob_client(container=par_storage_container, blob=par_file_name)
 
-        with open("/tmp/videos.zip", "wb") as my_blob:
+        with open("/tmp/" + par_file_name, "wb") as my_blob:
             download_stream = blob_client.download_blob()
             my_blob.write(download_stream.readall())
-        status = "ok"
 
-        s3_client = boto3.client('s3', aws_access_key_id="<<your AWS acces key id>>", aws_secret_access_key="<<your AWS key>>")
+        secret_client = SecretClient(vault_url=par_keyvault_url, credential=token_credential)
+        aws_access_key_id = secret_client.get_secret("aws-access-key-id").value
+        aws_secret_access_key = secret_client.get_secret("aws-secret-access-key").value
+        s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
         try:
-            response = s3_client.upload_file("/tmp/videos.zip", "testrbrblobs3", "videos.zip")
+            response = s3_client.upload_file("/tmp/" + par_file_name, par_s3_bucket, par_file_name)
         except ClientError as e:
             status = str(e)
 
