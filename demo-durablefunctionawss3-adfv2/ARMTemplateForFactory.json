@@ -1,0 +1,105 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "demo-durablefunctionawss3-adfv2"
+		},
+		"AzureFunction_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction'"
+		},
+		"AzureFunction_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://demo-durablefunctionawss3-app.azurewebsites.net"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy to S3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Start orchestrator",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "orchestrators/DurableFunctionOrchestrator",
+							"method": "GET",
+							"headers": {}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureFunction",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Copy data from Azure Storage to AWS S3",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Start orchestrator",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@activity('Start orchestrator').output.statusQueryGetUri",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"headers": {}
+						}
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-11-06T15:11:41Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureFunction')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureFunction')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "[parameters('AzureFunction_properties_typeProperties_functionAppUrl')]",
+					"functionKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureFunction_functionKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

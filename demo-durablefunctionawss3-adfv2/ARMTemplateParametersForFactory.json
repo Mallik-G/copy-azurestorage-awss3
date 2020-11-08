@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "demo-durablefunctionawss3-adfv2"
+		},
+		"AzureFunction_functionKey": {
+			"value": ""
+		},
+		"AzureFunction_properties_typeProperties_functionAppUrl": {
+			"value": "https://demo-durablefunctionawss3-app.azurewebsites.net"
+		}
+	}
+}
