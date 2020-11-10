@@ -15,8 +15,11 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"functionName": "orchestrators/DurableFunctionOrchestrator?file_name=testrb.txt",
-					"method": "GET"
+					"functionName": "orchestrators/DurableFunctionOrchestrator",
+					"method": "POST",
+					"body": {
+						"file_name": "testrb.txt"
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureFunction",
