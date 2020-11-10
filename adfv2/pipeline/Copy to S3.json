@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"functionName": "orchestrators/DurableFunctionOrchestrator",
+					"functionName": "orchestrators/DurableFunctionOrchestrator?file_name=testrb.txt",
 					"method": "GET"
 				},
 				"linkedServiceName": {
