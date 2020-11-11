@@ -19,7 +19,7 @@ def main(name: str) -> str:
 
     par_account_url = os.environ['account_url']
     par_storage_container = os.environ['storage_container']
-    par_file_name = os.environ['file_name'] # todo, pass this parameter from ADFv2 or loop through storage container
+    par_file_name = name # os.environ['file_name'] # todo, pass this parameter from ADFv2 or loop through storage container
     par_keyvault_url = os.environ['keyvault_url']
     par_s3_bucket = os.environ['s3_bucket']
 

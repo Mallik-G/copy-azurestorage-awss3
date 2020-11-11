@@ -7,7 +7,6 @@
 # - run pip install -r requirements.txt
 
 import logging
-import json
 
 import azure.functions as func
 import azure.durable_functions as df
@@ -15,11 +14,11 @@ import time
 
 
 def orchestrator_function(context: df.DurableOrchestrationContext):
-    
-    result1 = yield context.call_activity('DurableFunctionActivity', "Tokyo")
-    #result2 = yield context.call_activity('DurableFunctionActivity', "Seattle")
-    #result3 = yield context.call_activity('DurableFunctionActivity', "London")
 
-    return [result1] # , result2, result3]
+    file_name = context.get_input()
+
+    result1 = yield context.call_activity('DurableFunctionActivity', file_name)
+
+    return [file_name] # , result2, result3]
 
 main = df.Orchestrator.create(orchestrator_function)

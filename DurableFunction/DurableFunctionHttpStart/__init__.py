@@ -13,7 +13,9 @@ import azure.durable_functions as df
 
 async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
     client = df.DurableOrchestrationClient(starter)
-    instance_id = await client.start_new(req.route_params["functionName"], None, None)
+    file_name = req.params.get('file_name')
+
+    instance_id = await client.start_new(req.route_params["functionName"], None, file_name)
 
     logging.info(f"Started orchestration with ID = '{instance_id}'.")
 
