@@ -25,6 +25,7 @@ def main(name: str) -> str:
 
     status = "ok"
     try:
+        # Download file from Azure Storage and put it on tmp storage of Azure Function
         token_credential = DefaultAzureCredential()
         blob_service_client = BlobServiceClient(
             account_url=par_account_url,
@@ -36,6 +37,7 @@ def main(name: str) -> str:
             download_stream = blob_client.download_blob()
             my_blob.write(download_stream.readall())
 
+        # Upload file from Azure Function tmp storage to AWS S3
         secret_client = SecretClient(vault_url=par_keyvault_url, credential=token_credential)
         aws_access_key_id = secret_client.get_secret("aws-access-key-id").value
         aws_secret_access_key = secret_client.get_secret("aws-secret-access-key").value
@@ -47,5 +49,9 @@ def main(name: str) -> str:
 
     except Exception as e:
         status = str(e)
+    
+    finally:
+        os.remove("/tmp/" + par_file_name)
+        download_stream = None
 
     return status
