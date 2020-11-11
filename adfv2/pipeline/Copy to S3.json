@@ -15,8 +15,8 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"functionName": "orchestrators/DurableFunctionOrchestrator",
-					"method": "POST",
+					"functionName": "orchestrators/DurableFunctionOrchestrator?file_name=testrb.txt",
+					"method": "GET",
 					"body": {
 						"file_name": "testrb.txt"
 					}
